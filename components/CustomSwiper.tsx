@@ -1,35 +1,54 @@
 import { data } from '@/constants';
 import { OnboardingData } from '@/types/type';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { View, Text, FlatList, Animated, Dimensions } from 'react-native';
+import React, { useCallback, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import { View, Text, FlatList, Animated, Dimensions, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import CustomButton from './CustomButton';
-import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
+
 interface CustomSwiperProps {
-    currentIndex: number; // Control the current index from outside
-    onIndexChanged: (index: number) => void
+    onIndexChange: (index: number) => void; // Callback to notify parent of index change
 }
 
-const CustomSwiper = ({ currentIndex, onIndexChanged }: CustomSwiperProps) => {
-
-    const isLastSlide = data.onboarding.length - 1 === currentIndex
-
+const CustomSwiper = forwardRef(({ onIndexChange }: CustomSwiperProps, ref) => {
     const theme = useTheme();
     const scrollX = useRef(new Animated.Value(0)).current; // For tracking scroll position
     const flatListRef = useRef<FlatList>(null);
-    const currentScrollIndex = useRef<number | null>(null)
+    const currentIndexRef = useRef(0); // To store the current index
+    const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-
-
-    useEffect(() => {
-        if (flatListRef.current && currentScrollIndex.current !== currentIndex) {
-            flatListRef.current.scrollToIndex({ index: currentIndex, animated: true });
+    // Function to scroll to the next slide
+    const goToNextSlide = () => {
+        if (flatListRef.current) {
+            const nextIndex = currentIndexRef.current + 1;
+            if (nextIndex < data.onboarding.length) {
+                flatListRef.current.scrollToIndex({ index: nextIndex, animated: true });
+            }
         }
-    }, [currentIndex]);
+    };
+
+    // Expose the `goToNextSlide` function to the parent via ref
+    useImperativeHandle(ref, () => ({
+        goToNextSlide,
+    }));
 
 
+    // Function to handle the scroll event and update the current index
+    const onScroll = useCallback(
+        Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            {
+                useNativeDriver: false, // Using false since FlatList scrolling is not in native animations
+                listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+                    const contentOffsetX = event.nativeEvent.contentOffset.x;
+                    const currentIndex = Math.round(contentOffsetX / width);
+                    currentIndexRef.current = currentIndex;
+                    onIndexChange(currentIndex); // Notify parent of index change
+                },
+            }
+        ),
+        []
+    );
 
     const renderItem = ({ item }: { item: OnboardingData }) => {
         return (
@@ -50,7 +69,6 @@ const CustomSwiper = ({ currentIndex, onIndexChanged }: CustomSwiperProps) => {
                         textAlign: 'center',
                         fontFamily: 'Outfit500',
                         color: theme.colors.tertiary,
-
                     }}
                 >
                     {item.subtitle1}
@@ -64,7 +82,6 @@ const CustomSwiper = ({ currentIndex, onIndexChanged }: CustomSwiperProps) => {
                         textAlign: 'center',
                         fontFamily: 'Outfit500',
                         color: theme.colors.tertiary,
-
                     }}
                 >
                     {item.subtitle2}
@@ -72,8 +89,6 @@ const CustomSwiper = ({ currentIndex, onIndexChanged }: CustomSwiperProps) => {
             </View>
         );
     };
-
-
 
     const renderDots = () => {
         return (
@@ -113,42 +128,6 @@ const CustomSwiper = ({ currentIndex, onIndexChanged }: CustomSwiperProps) => {
         );
     };
 
-
-    //             {data.onboarding.map((_, i) => {
-    //                 const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
-
-    //                 // Animating the dots' scale and opacity based on scroll position
-    //                 const dotScale = scrollX.interpolate({
-    //                     inputRange,
-    //                     outputRange: [1, 1.5, 1],
-    //                     extrapolate: 'clamp',
-    //                 });
-
-    //                 const dotOpacity = scrollX.interpolate({
-    //                     inputRange,
-    //                     outputRange: [0.3, 1, 0.3],
-    //                     extrapolate: 'clamp',
-    //                 });
-
-    //                 return (
-    //                     <Animated.View
-    //                         key={i}
-    //                         style={{
-    //                             width: 10,
-    //                             height: 10,
-    //                             borderRadius: 5,
-    //                             marginHorizontal: 8,
-    //                             backgroundColor: '#9676dd',
-    //                             transform: [{ scale: dotScale }],
-    //                             opacity: dotOpacity,
-    //                         }}
-    //                     />
-    //                 );
-    //             })}
-    //         </View>
-    //     );
-    // };
-
     return (
         <View style={{ flex: 1, height: "100%" }}>
             <FlatList
@@ -159,17 +138,12 @@ const CustomSwiper = ({ currentIndex, onIndexChanged }: CustomSwiperProps) => {
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.key.toString()}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                    { useNativeDriver: false } // Using false since FlatList scrolling is not in native animations
-                )
-                }
+                onScroll={onScroll}
                 scrollEventThrottle={16} // Event fires every 16ms for smooth animation
             />
             {renderDots()}
-
         </View>
     );
-};
+});
 
 export default CustomSwiper;

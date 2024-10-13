@@ -55,6 +55,22 @@ const OnBoarding = () => {
   const theme = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const isLastSlide = data.onboarding.length - 1 === currentIndex
+  const swiperRef = useRef<CustomSwiperRef>(null);
+  const count = useRef(0)
+
+  console.log(count.current++)
+
+
+  const handleNext = () => {
+    if (swiperRef.current) {
+      swiperRef.current.goToNextSlide();
+    }
+  };
+
+  const handleIndexChange = (index: number) => {
+    // setCurrentIndex(index)
+  };
+
 
 
 
@@ -78,17 +94,11 @@ const OnBoarding = () => {
       >
         Skip
       </Button>
-      <CustomSwiper
-        currentIndex={currentIndex}
-        onIndexChanged={(index) => setCurrentIndex(index)}
+      <CustomSwiper ref={swiperRef} onIndexChange={handleIndexChange} />
 
-      />
       <View style={{ marginTop: 16, marginBottom: 28, width: "75%", alignSelf: "center" }}>
         <CustomButton
-          onPress={() => {
-            isLastSlide ? router.replace("/(auth)/sign-up")
-              : setCurrentIndex(prev => prev + 1)
-          }}
+          onPress={handleNext}
 
         >
           {data.onboarding[currentIndex].buttonText}

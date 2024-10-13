@@ -158,6 +158,6 @@ declare interface OnboardingData {
   image: any;
 }
 
-declare interface CustomSwiperRef {
-  scrollToOffset: (params: { offset: number; animated: boolean }) => void; // Scroll method exposed to the parent component
+interface CustomSwiperRef {
+  goToNextSlide: () => void;
 }
