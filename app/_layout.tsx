@@ -70,8 +70,7 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(root)" />
 
-          <Stack.Screen name="+not-found"
-          />
+          <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>
     </PaperProvider>

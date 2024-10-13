@@ -3,14 +3,17 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "@/*": ["./*"]
+    },
+    "allowJs": true, // Allows JS and JSX files
+    "checkJs": false, // Set to true if you want to type-check JavaScript files
+    "resolveJsonModule": true // Optional: If you import .json files
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.js", // Include JS files
+    "**/*.jsx", // Include JSX files
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ]
