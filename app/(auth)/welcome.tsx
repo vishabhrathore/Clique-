@@ -11,9 +11,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
 
 const renderItem = ({ item }: { item: OnboardingData }) => {
-  const theme = useTheme()
+  const theme = useTheme();
   return (
-    <View key={item.key} >
+    <View key={item.key}>
       <Text
         style={{
           fontSize: 32,
@@ -35,7 +35,7 @@ const renderItem = ({ item }: { item: OnboardingData }) => {
       >
         {item.subtitle1}
       </Text>
-      <View >{<item.image />}</View>
+      <View>{<item.image />}</View>
       <Text
         style={{
           fontSize: 28,
@@ -47,25 +47,21 @@ const renderItem = ({ item }: { item: OnboardingData }) => {
         {item.subtitle2}
       </Text>
     </View>
-
-  )
+  );
 };
 
 const OnBoarding = () => {
   const theme = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const isLastSlide = data.onboarding.length - 1 === currentIndex
+  const isLastSlide = data.onboarding.length - 1 === currentIndex;
   const swiperRef = useRef<CustomSwiperRef>(null);
-  const count = useRef(0)
+  const count = useRef(0);
 
-  console.log(count.current++)
-
+  console.log(count.current++);
 
   const handleNext = () => {
-
     if (isLastSlide) {
       router.replace("/(auth)/sign-up");
-
     }
 
     if (swiperRef.current) {
@@ -74,14 +70,8 @@ const OnBoarding = () => {
   };
 
   const handleIndexChange = (index: number) => {
-    setCurrentIndex(index)
+    setCurrentIndex(index);
   };
-
-
-
-
-
-
 
   return (
     <SafeAreaView
@@ -102,17 +92,18 @@ const OnBoarding = () => {
       </Button>
       <CustomSwiper ref={swiperRef} onIndexChange={handleIndexChange} />
 
-      <View style={{ marginTop: 16, marginBottom: 28, width: "75%", alignSelf: "center" }}>
-        <CustomButton
-          onPress={handleNext}
-
-        >
+      <View
+        style={{
+          marginTop: 16,
+          marginBottom: 28,
+          width: "75%",
+          alignSelf: "center",
+        }}
+      >
+        <CustomButton onPress={handleNext}>
           {data.onboarding[currentIndex].buttonText}
         </CustomButton>
-
       </View>
-
-
     </SafeAreaView>
   );
 };

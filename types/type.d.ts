@@ -60,8 +60,8 @@ declare interface Ride {
 }
 
 declare interface ButtonProps extends TouchableOpacityProps {
-  bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success";
-  textVariant?: "primary" | "default" | "secondary" | "danger" | "success";
+  bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success" ;
+  textVariant?: "primary" | "default" | "secondary" | "danger" | "success" | "white";
   IconLeft?: React.ComponentType<any>;
   IconRight?: React.ComponentType<any>;
   className?: string;
@@ -86,6 +86,7 @@ declare interface GoogleInputProps {
 declare interface InputFieldProps extends TextInputProps {
   label: string;
   icon?: any;
+  onPressRightIcon?:((event: GestureResponderEvent) => void) | null; 
   secureTextEntry?: boolean;
   labelStyle?: StyleProp<TextStyle>; // Use StyleProp<TextStyle> for text styles
   containerStyle?: StyleProp<ViewStyle>; // Use StyleProp<ViewStyle> for view/container styles
@@ -94,6 +95,7 @@ declare interface InputFieldProps extends TextInputProps {
   className?: string;
   leftIcon?: string | React.ReactNode; // Left icon, can be a string (for built-in icons) or a custom component
   rightIcon?: string | React.ReactNode; // Right icon, can be a string (for built-in icons) or a custom component
+  helperText?: string
 }
 
 declare interface PaymentProps {

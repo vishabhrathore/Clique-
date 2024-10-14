@@ -5,12 +5,17 @@ import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OAuth from "@/components/OAuth";
+import GoogleIcon from "@/assets/icons/GoogleIcon";
 
 // Define a type for the form fields
 type FormFieldNames = "name" | "email" | "password";
 
 // Validation logic
-const validateSignUpForm = (values: { name: string; email: string; password: string }) => {
+const validateSignUpForm = (values: {
+  name: string;
+  email: string;
+  password: string;
+}) => {
   const errors: { name?: string; email?: string; password?: string } = {};
 
   if (!values.name) {
@@ -37,7 +42,13 @@ const SignUp = () => {
 
   // Form state
   const [values, setValues] = useState({ name: "", email: "", password: "" });
-  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+  }>({});
+
+  const [ secureEntry, setSecureEntry]= useState(true)
 
   // Handle input changes
   const handleChange = (name: FormFieldNames, value: string) => {
@@ -47,7 +58,10 @@ const SignUp = () => {
   // Validate on blur
   const handleBlur = (name: FormFieldNames) => {
     const validationErrors = validateSignUpForm(values);
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: validationErrors[name] }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: validationErrors[name],
+    }));
   };
 
   // Handle form submission
@@ -71,16 +85,15 @@ const SignUp = () => {
         padding: 16,
       }}
     >
-      <View style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <View style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <InputField
           label="Name"
-          rightIcon="lock"
           value={values.name}
           onChangeText={(text) => handleChange("name", text)}
           onBlur={() => handleBlur("name")} // Validate on blur
-          error={!!errors.name} // Display error if present
+          helperText={errors.name}
+          error={!!errors?.name}
         />
-        {errors.name && <Text style={{ color: theme.colors.error }}>{errors.name}</Text>}
 
         <InputField
           label="Email"
@@ -88,21 +101,23 @@ const SignUp = () => {
           onChangeText={(text) => handleChange("email", text)}
           onBlur={() => handleBlur("email")} // Validate on blur
           error={!!errors.email} // Display error if present
+          helperText={errors.email}
         />
-        {errors.email && <Text style={{ color: theme.colors.error }}>{errors.email}</Text>}
 
         <InputField
           label="Password"
-          leftIcon="checkbox-marked-circle-outline"
           value={values.password}
-          secureTextEntry
+          onPressRightIcon={ ()=> setSecureEntry(!secureEntry)}
+          secureTextEntry={secureEntry}
+          rightIcon="eye"
+
           onChangeText={(text) => handleChange("password", text)}
           onBlur={() => handleBlur("password")} // Validate on blur
           error={!!errors.password} // Display error if present
+          helperText={errors.password}
         />
-        {errors.password && <Text style={{ color: theme.colors.error }}>{errors.password}</Text>}
 
-        <CustomButton onPress={handleSubmit}>
+        <CustomButton onPress={handleSubmit} textVariant="white">
           Sign Up
         </CustomButton>
       </View>
