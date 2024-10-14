@@ -49,6 +49,7 @@ const CustomButton = ({
   textVariant = "default",
   IconLeft,
   IconRight,
+  style,
   ...props
 }: ButtonProps) => {
   const theme = useTheme();
@@ -59,7 +60,7 @@ const CustomButton = ({
       mode={bgVariant === "outline" ? "outlined" : "contained"}
       style={[
         getBgVariantStyle(bgVariant, theme),
-        { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8 },
+        { paddingVertical: 6, paddingHorizontal: 16, borderRadius: 8 }, style
       ]}
       labelStyle={[getTextVariantStyle(textVariant, theme), { fontSize: 16 }]}
       icon={IconLeft ? () => <IconLeft width={24} height={24} /> : undefined}

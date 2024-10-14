@@ -8,6 +8,7 @@ import {
 import { InputFieldProps } from "@/types/type";
 import { HelperText, Text, TextInput, useTheme } from "react-native-paper";
 
+
 const InputField = ({
   label,
   leftIcon,
@@ -28,19 +29,32 @@ const InputField = ({
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flexDirection: "column", width: "100%" }}>
-          <Text style={[{ marginBottom: 4, color: "#9676dd" }, labelStyle]}>
+        <View style={{ flexDirection: "column", width: "100%", borderRadius: 8 }}>
+          {/* <Text style={[{ marginBottom: 4, color: "#9676dd" }, labelStyle]}>
             {label}
-          </Text>
+          </Text> */}
           <View style={[{ width: "100%" }, containerStyle]}>
             <TextInput
-              outlineStyle={{
-                borderRadius: 8,
-                borderColor: "#9676dd",
+
+              mode="flat"
+              underlineStyle={{
+                borderRadius: 12
               }}
-              mode="outlined"
               secureTextEntry={secureTextEntry}
-              contentStyle={[{ color: theme.colors.primary }, inputStyle]}
+              // activeUnderlineColor="transparent"
+
+              outlineStyle={{
+                borderColor: "#9676dd", // Custom border color
+                borderWidth: 1, // Add border to create a flat, bordered input
+              }}
+              contentStyle={[
+                {
+                  color: theme.colors.primary,
+                  backgroundColor: theme.colors.surfaceContainerLow,
+                  borderRadius: 12,
+                },
+                inputStyle,
+              ]}
               left={
                 leftIcon ? (
                   <TextInput.Icon
@@ -54,7 +68,7 @@ const InputField = ({
               right={
                 rightIcon ? (
                   <TextInput.Icon
-                    onPress={onPressRightIcon ? onPressRightIcon : () => {}}
+                    onPress={onPressRightIcon ? onPressRightIcon : () => { }}
                     icon={
                       typeof rightIcon === "string"
                         ? rightIcon
@@ -67,9 +81,11 @@ const InputField = ({
               {...props}
             />
           </View>
-          { props.error && <HelperText type="error" visible={props.error}>
-            {helperText}
-          </HelperText>}
+          {props.error && (
+            <HelperText type="error" visible={props.error}>
+              {helperText}
+            </HelperText>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

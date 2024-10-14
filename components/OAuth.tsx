@@ -1,10 +1,13 @@
 import { router } from "expo-router";
-import { Alert, View } from "react-native";
+import { Alert, Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import CustomButton from "./CustomButton";
 import GoogleIcon from "@/assets/icons/GoogleIcon";
 import { Text } from "react-native-paper";
+import AuthButton from "./AuthButtton";
+import AppleIcon from "@/assets/icons/AppleIcon";
 
 const OAuth = () => {
+  const { width: screenWidth } = Dimensions.get("window"); // Get screen width
   //   const handleGoogleSignIn = async () => {
   //     // const result = await googleOAuth(startOAuthFlow);
 
@@ -17,16 +20,32 @@ const OAuth = () => {
   //   };
 
   return (
-    <View style={{ marginTop: 16 }}>
-      <CustomButton
+    <View style={{ display: "flex", flexDirection: "row", gap: 16 }}>
+
+      <AuthButton
         IconLeft={GoogleIcon}
-        bgVariant="outline"
-        textVariant="white"
+        style={{
+          width: screenWidth * 0.5 - 24
+        }}
       >
-        Continue with Google
-      </CustomButton>
+        Google
+      </AuthButton>
+      <AuthButton
+        IconLeft={AppleIcon}
+        style={{
+          width: screenWidth * 0.5 - 24
+
+        }}
+      >
+        Apple
+      </AuthButton>
+
+
+
     </View>
   );
 };
 
 export default OAuth;
+
+

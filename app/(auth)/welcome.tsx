@@ -8,47 +8,6 @@ import { useRef, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Swiper from "react-native-swiper";
-
-const renderItem = ({ item }: { item: OnboardingData }) => {
-  const theme = useTheme();
-  return (
-    <View key={item.key}>
-      <Text
-        style={{
-          fontSize: 32,
-          textAlign: "center",
-          // color: theme.colors.primaryContainer,
-          fontFamily: "Outfit500",
-          color: "#9676dd",
-        }}
-      >
-        {item.title}
-      </Text>
-      <Text
-        style={{
-          fontSize: 28,
-          textAlign: "center",
-          // color: theme.colors.tertiary,
-          fontFamily: "Outfit500",
-        }}
-      >
-        {item.subtitle1}
-      </Text>
-      <View>{<item.image />}</View>
-      <Text
-        style={{
-          fontSize: 28,
-          textAlign: "center",
-          // color: theme.colors.tertiary,
-          fontFamily: "Outfit500",
-        }}
-      >
-        {item.subtitle2}
-      </Text>
-    </View>
-  );
-};
 
 const OnBoarding = () => {
   const theme = useTheme();

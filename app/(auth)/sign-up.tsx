@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
-import { View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { TouchableOpacity, View } from "react-native";
+import { Checkbox, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OAuth from "@/components/OAuth";
 import GoogleIcon from "@/assets/icons/GoogleIcon";
+import TextField from "@/components/TextField";
+import SignUpIcon from "@/assets/icons/SignUp";
+import { router } from "expo-router";
 
 // Define a type for the form fields
 type FormFieldNames = "name" | "email" | "password";
@@ -47,8 +50,9 @@ const SignUp = () => {
     email?: string;
     password?: string;
   }>({});
+  const [checked, setChecked] = useState(false)
 
-  const [ secureEntry, setSecureEntry]= useState(true)
+  const [secureEntry, setSecureEntry] = useState(true)
 
   // Handle input changes
   const handleChange = (name: FormFieldNames, value: string) => {
@@ -80,34 +84,48 @@ const SignUp = () => {
       style={{
         display: "flex",
         backgroundColor: theme.colors.background,
-        justifyContent: "center",
         flex: 1,
         padding: 16,
       }}
     >
+      <View style={{ width: "100%", display: "flex", alignItems: "center" }}>
+        <SignUpIcon />
+
+      </View>
+      <Text style={{ fontFamily: "Outfit500", fontSize: 24, marginBottom: 16 }}>Create an Account </Text>
+      <OAuth />
+
+      <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 20 }}>
+        <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
+        <Text style={{ marginHorizontal: 12, fontSize: 12, color: theme.colors.outline }}>or register with</Text>
+        <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
+      </View>
       <View style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <InputField
+        <TextField
           label="Name"
           value={values.name}
+          placeholder="User Name"
           onChangeText={(text) => handleChange("name", text)}
           onBlur={() => handleBlur("name")} // Validate on blur
           helperText={errors.name}
           error={!!errors?.name}
         />
 
-        <InputField
+        <TextField
           label="Email"
           value={values.email}
+          placeholder="Email"
           onChangeText={(text) => handleChange("email", text)}
           onBlur={() => handleBlur("email")} // Validate on blur
           error={!!errors.email} // Display error if present
           helperText={errors.email}
         />
 
-        <InputField
+        <TextField
           label="Password"
+          placeholder="Password"
           value={values.password}
-          onPressRightIcon={ ()=> setSecureEntry(!secureEntry)}
+          onPressRightIcon={() => setSecureEntry(!secureEntry)}
           secureTextEntry={secureEntry}
           rightIcon="eye"
 
@@ -116,13 +134,30 @@ const SignUp = () => {
           error={!!errors.password} // Display error if present
           helperText={errors.password}
         />
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Checkbox
+            status={checked ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setChecked(!checked);
+            }}
+          />
+          <Text style={{ marginLeft: 8 }}>I Agree to the Terms & Conditions</Text>
+        </View>
 
         <CustomButton onPress={handleSubmit} textVariant="white">
-          Sign Up
+          Create Account
         </CustomButton>
       </View>
-      <OAuth />
-    </SafeAreaView>
+
+      <View style={{ width: "100%", flexDirection: "row", marginTop: 16, display: "flex", justifyContent: "center" }}>
+        <Text>Already have an account? </Text>
+        <TouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
+          <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>Login</Text>
+        </TouchableOpacity>
+      </View>
+
+
+    </SafeAreaView >
   );
 };
 
