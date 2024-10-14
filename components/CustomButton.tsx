@@ -25,7 +25,7 @@ const getBgVariantStyle = (variant: ButtonProps["bgVariant"], theme: any) => {
 const getTextVariantStyle = (variant: ButtonProps["textVariant"], theme: any) => {
     switch (variant) {
         case "primary":
-            return { color: theme.colors.onPrimaryContainer };
+            return { color: theme.colors.primaryContainer };
         case "secondary":
             return { color: theme.colors.onSecondaryContainer };
         case "danger":
@@ -54,11 +54,11 @@ const CustomButton = ({
             mode={bgVariant === "outline" ? "outlined" : "contained"}
             style={[
                 getBgVariantStyle(bgVariant, theme),
-                { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8 },
+                { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8, },
             ]}
             labelStyle={[
                 getTextVariantStyle(textVariant, theme),
-                { fontSize: 16 },
+                { fontSize: 16, },
             ]}
             icon={IconLeft ? () => <IconLeft /> : undefined}
             {...props}

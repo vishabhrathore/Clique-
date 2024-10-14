@@ -32,6 +32,22 @@ const CustomSwiper = forwardRef(({ onIndexChange }: CustomSwiperProps, ref) => {
         goToNextSlide,
     }));
 
+    const debouncedIndexChange = useCallback(
+        (index: number) => {
+            if (scrollTimeout.current) {
+                clearTimeout(scrollTimeout.current);
+            }
+
+            // Delay notifying the parent about the index change
+            scrollTimeout.current = setTimeout(() => {
+                if (currentIndexRef.current !== index) {
+                    onIndexChange(index); // Call parent only when index changes
+                    currentIndexRef.current = index;
+                }
+            }, 50);
+        },
+        [onIndexChange]
+    );
 
     // Function to handle the scroll event and update the current index
     const onScroll = useCallback(
@@ -42,8 +58,8 @@ const CustomSwiper = forwardRef(({ onIndexChange }: CustomSwiperProps, ref) => {
                 listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
                     const contentOffsetX = event.nativeEvent.contentOffset.x;
                     const currentIndex = Math.round(contentOffsetX / width);
-                    currentIndexRef.current = currentIndex;
-                    onIndexChange(currentIndex); // Notify parent of index change
+                    // currentIndexRef.current = currentIndex;
+                    debouncedIndexChange(currentIndex); // Notify parent of index change
                 },
             }
         ),

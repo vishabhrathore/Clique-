@@ -62,13 +62,19 @@ const OnBoarding = () => {
 
 
   const handleNext = () => {
+
+    if (isLastSlide) {
+      router.replace("/(auth)/sign-up");
+
+    }
+
     if (swiperRef.current) {
       swiperRef.current.goToNextSlide();
     }
   };
 
   const handleIndexChange = (index: number) => {
-    // setCurrentIndex(index)
+    setCurrentIndex(index)
   };
 
 
