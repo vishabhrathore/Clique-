@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
-import { TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Checkbox, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OAuth from "@/components/OAuth";
@@ -12,25 +12,24 @@ import LoginIcon from "@/assets/icons/LoginIcon";
 import { router } from "expo-router";
 
 // Define a type for the form fields
-type FormFieldNames = "name" | "email" | "password";
+type FormFieldNames = "userName" |  "password";
 
 // Validation logic
 const validateSignUpForm = (values: {
-  name: string;
-  email: string;
+  userName: string;
   password: string;
 }) => {
-  const errors: { name?: string; email?: string; password?: string } = {};
+  const errors: { userName?: string;  password?: string } = {};
 
-  if (!values.name) {
-    errors.name = "Name is required";
+  if (!values.userName) {
+    errors.userName = "Name is required";
   }
 
-  if (!values.email) {
-    errors.email = "Email is required";
-  } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-    errors.email = "Email is invalid";
-  }
+  // if (!values.email) {
+  //   errors.email = "Email is required";
+  // } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+  //   errors.email = "Email is invalid";
+  // }
 
   if (!values.password) {
     errors.password = "Password is required";
@@ -45,10 +44,9 @@ const SignIn = () => {
   const theme = useTheme();
 
   // Form state
-  const [values, setValues] = useState({ name: "", email: "", password: "" });
+  const [values, setValues] = useState({ userName: "", password: "" });
   const [errors, setErrors] = useState<{
-    name?: string;
-    email?: string;
+    userName?: string;
     password?: string;
   }>({});
   const [checked, setChecked] = useState(false)
@@ -81,6 +79,7 @@ const SignIn = () => {
   };
 
   return (
+    <ScrollView>
     <SafeAreaView
       style={{
         display: "flex",
@@ -90,7 +89,7 @@ const SignIn = () => {
       }}
     >
       <View style={{ width: "100%", display: "flex", alignItems: "center" }}>
-        <LoginIcon />
+        <SignUpIcon />
 
       </View>
       <Text style={{ fontFamily: "Outfit500", fontSize: 24, marginBottom: 16 }}>Login to Your Account </Text>
@@ -103,13 +102,13 @@ const SignIn = () => {
       </View>
       <View style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <TextField
-          label="Name"
-          value={values.name}
+          label="User Name"
+          value={values.userName}
           placeholder="User Name"
-          onChangeText={(text) => handleChange("name", text)}
-          onBlur={() => handleBlur("name")} // Validate on blur
-          helperText={errors.name}
-          error={!!errors?.name}
+          onChangeText={(text) => handleChange("userName", text)}
+          onBlur={() => handleBlur("userName")} // Validate on blur
+          helperText={errors.userName}
+          error={!!errors?.userName}
         />
         <TextField
           label="Password"
@@ -147,6 +146,8 @@ const SignIn = () => {
 
 
     </SafeAreaView >
+
+    </ScrollView>
   );
 };
 

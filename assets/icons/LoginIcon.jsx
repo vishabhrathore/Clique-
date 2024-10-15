@@ -3,13 +3,13 @@ import Svg, { G, Path } from "react-native-svg";
 const LoginIcon = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
-    width={350}
-    height={262.5}
+    width={300}
+    height={225.5}
     fill="none"
     style={{
       WebkitPrintColorAdjust: ":exact",
     }}
-    viewBox="12665 -8649 350 262.5"
+    viewBox="12690 -8649 300 225"
     {...props}
   >
     <G

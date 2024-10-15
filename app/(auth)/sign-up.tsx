@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
-import { TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from "react-native";
 import { Checkbox, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OAuth from "@/components/OAuth";
@@ -9,6 +9,7 @@ import GoogleIcon from "@/assets/icons/GoogleIcon";
 import TextField from "@/components/TextField";
 import SignUpIcon from "@/assets/icons/SignUp";
 import { router } from "expo-router";
+import LoginIcon from "@/assets/icons/LoginIcon";
 
 // Define a type for the form fields
 type FormFieldNames = "name" | "email" | "password";
@@ -80,7 +81,12 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    style={{ flex: 1 }}
+  >
+       <ScrollView>
+  <SafeAreaView
       style={{
         display: "flex",
         backgroundColor: theme.colors.background,
@@ -89,7 +95,7 @@ const SignUp = () => {
       }}
     >
       <View style={{ width: "100%", display: "flex", alignItems: "center" }}>
-        <SignUpIcon />
+        <LoginIcon />
 
       </View>
       <Text style={{ fontFamily: "Outfit500", fontSize: 24, marginBottom: 16 }}>Create an Account </Text>
@@ -158,6 +164,12 @@ const SignUp = () => {
 
 
     </SafeAreaView >
+    </ScrollView>
+  </KeyboardAvoidingView>
+
+ 
+
+  
   );
 };
 
