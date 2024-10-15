@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 import { Alert, TouchableOpacity, View } from "react-native";
-import { Checkbox, Modal, Text, useTheme } from "react-native-paper";
+import { Checkbox, Modal, Portal, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OAuth from "@/components/OAuth";
 import GoogleIcon from "@/assets/icons/GoogleIcon";
@@ -11,6 +11,7 @@ import SignUpIcon from "@/assets/icons/SignUp";
 import { router } from "expo-router";
 import { useSignUp } from "@clerk/clerk-expo";
 import SuccessModal from "@/components/Modal";
+import { Theme } from "@/assets/theme/theme";
 
 // Define a type for the values fields
 type FormFieldNames = "name" | "email" | "password";
@@ -149,6 +150,7 @@ const SignUp = () => {
     if (Object.keys(validationErrors).length === 0) {
       // No errors, proceed with sign-up
       console.log("values submitted successfully!", values);
+      router.replace("/(auth)/otp")
     }
   };
 
@@ -220,6 +222,9 @@ const SignUp = () => {
         <CustomButton onPress={handleSubmit} textVariant="white">
           Create Account
         </CustomButton>
+        <CustomButton onPress={() =>router.replace("/(auth)/otp")} textVariant="white">
+          open modal
+        </CustomButton>
       </View>
 
       <View style={{ width: "100%", flexDirection: "row", marginTop: 16, display: "flex", justifyContent: "center" }}>
@@ -228,7 +233,12 @@ const SignUp = () => {
           <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>Login</Text>
         </TouchableOpacity>
       </View>
-      {/* <SuccessModal showSuccessModal={showSuccessModal} onClose={() => setShowSuccessModal(false)} /> */}
+      {/* <SuccessModal showSuccessModal={showSuccessModal} onClose={ /> */}
+      <Portal>
+        <Modal visible={showSuccessModal} onDismiss={() => setShowSuccessModal(false)} contentContainerStyle={{backgroundColor: Theme.schemes.dark.surfaceContainer, padding: 20, margin:20, borderRadius:12}} >
+          <Text>Example Modal.  Click outside this area to dismiss.</Text>
+        </Modal>
+      </Portal>
 
 
     </SafeAreaView >
