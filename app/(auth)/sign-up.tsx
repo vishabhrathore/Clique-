@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
-import { TouchableOpacity, View } from "react-native";
-import { Checkbox, Text, useTheme } from "react-native-paper";
+import { Alert, TouchableOpacity, View } from "react-native";
+import { Checkbox, Modal, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OAuth from "@/components/OAuth";
 import GoogleIcon from "@/assets/icons/GoogleIcon";
 import TextField from "@/components/TextField";
 import SignUpIcon from "@/assets/icons/SignUp";
 import { router } from "expo-router";
+import { useSignUp } from "@clerk/clerk-expo";
+import SuccessModal from "@/components/Modal";
 
-// Define a type for the form fields
+// Define a type for the values fields
 type FormFieldNames = "name" | "email" | "password";
 
 // Validation logic
@@ -43,16 +45,87 @@ const validateSignUpForm = (values: {
 const SignUp = () => {
   const theme = useTheme();
 
-  // Form state
+  // values state
   const [values, setValues] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState<{
     name?: string;
     email?: string;
     password?: string;
   }>({});
-  const [checked, setChecked] = useState(false)
 
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [checked, setChecked] = useState(false)
+  const { isLoaded, signUp, setActive } = useSignUp()
   const [secureEntry, setSecureEntry] = useState(true)
+
+
+  const [verification, setVerification] = useState({
+    state: "default",
+    error: "",
+    code: "",
+  });
+
+
+  const onSignUpPress = async () => {
+    if (!isLoaded) return;
+    try {
+      await signUp.create({
+        emailAddress: values.email,
+        password: values.password,
+      });
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      setVerification({
+        ...verification,
+        state: "pending",
+      });
+    } catch (err: any) {
+      // See https://clerk.com/docs/custom-flows/error-handling
+      // for more info on error handling
+      console.log(JSON.stringify(err, null, 2));
+      Alert.alert("Error", err.errors[0].longMessage);
+    }
+  };
+  // const onPressVerify = async () => {
+  //   if (!isLoaded) return;
+  //   try {
+  //     const completeSignUp = await signUp.attemptEmailAddressVerification({
+  //       code: verification.code,
+  //     });
+  //     if (completeSignUp.status === "complete") {
+  //       await fetchAPI("/(api)/user", {
+  //         method: "POST",
+  //         body: JSON.stringify({
+  //           name: values.name,
+  //           email: values.email,
+  //           clerkId: completeSignUp.createdUserId,
+  //         }),
+  //       });
+  //       await setActive({ session: completeSignUp.createdSessionId });
+  //       setVerification({
+  //         ...verification,
+  //         state: "success",
+  //       });
+  //     } else {
+  //       setVerification({
+  //         ...verification,
+  //         error: "Verification failed. Please try again.",
+  //         state: "failed",
+  //       });
+  //     }
+  //   } catch (err: any) {
+  //     // See https://clerk.com/docs/custom-flows/error-handling
+  //     // for more info on error handling
+  //     setVerification({
+  //       ...verification,
+  //       error: err.errors[0].longMessage,
+  //       state: "failed",
+  //     });
+  //   }
+  // };
+
+
+
+
 
   // Handle input changes
   const handleChange = (name: FormFieldNames, value: string) => {
@@ -68,14 +141,14 @@ const SignUp = () => {
     }));
   };
 
-  // Handle form submission
+  // Handle values submission
   const handleSubmit = () => {
     const validationErrors = validateSignUpForm(values);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       // No errors, proceed with sign-up
-      console.log("Form submitted successfully!", values);
+      console.log("values submitted successfully!", values);
     }
   };
 
@@ -155,6 +228,7 @@ const SignUp = () => {
           <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>Login</Text>
         </TouchableOpacity>
       </View>
+      {/* <SuccessModal showSuccessModal={showSuccessModal} onClose={() => setShowSuccessModal(false)} /> */}
 
 
     </SafeAreaView >

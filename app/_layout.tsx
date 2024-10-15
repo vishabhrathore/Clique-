@@ -21,6 +21,27 @@ import {
 import merge from "deepmerge";
 
 import { Theme } from "@/assets/theme/theme";
+import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo'
+import { Slot } from 'expo-router'
+
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const customDarkTheme = { ...MD3DarkTheme, colors: Theme.schemes.dark };
 const customLightTheme = { ...MD3LightTheme, colors: Theme.schemes.light };
@@ -32,6 +53,22 @@ const { LightTheme, DarkTheme } = adaptNavigationTheme({
 
 const CombinedLightTheme = merge(LightTheme, customLightTheme);
 const CombinedDarkTheme = merge(DarkTheme, customDarkTheme);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -58,21 +95,33 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+
   if (!loaded) {
     return null;
   }
 
-  return (
-    <PaperProvider theme={paperTheme}>
-      <ThemeProvider value={paperTheme}>
-        <Stack>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(root)" />
+  if (!publishableKey) {
+    throw new Error(
+      'Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env',
+    )
+  }
 
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </ThemeProvider>
-    </PaperProvider>
+
+  return (
+    <ClerkProvider publishableKey={publishableKey}>
+      <ClerkLoaded>
+        <PaperProvider theme={paperTheme}>
+          <ThemeProvider value={paperTheme}>
+            <Stack>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="(root)" />
+
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </ThemeProvider>
+        </PaperProvider>
+      </ClerkLoaded>
+    </ClerkProvider>
   );
 }
