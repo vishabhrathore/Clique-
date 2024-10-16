@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
-import { Alert, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, Alert, TouchableOpacity, View } from "react-native";
 import { Checkbox, Modal, Portal, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OAuth from "@/components/OAuth";
@@ -9,6 +9,7 @@ import GoogleIcon from "@/assets/icons/GoogleIcon";
 import TextField from "@/components/TextField";
 import SignUpIcon from "@/assets/icons/SignUp";
 import { router } from "expo-router";
+import LoginIcon from "@/assets/icons/LoginIcon";
 import { useSignUp } from "@clerk/clerk-expo";
 import SuccessModal from "@/components/Modal";
 import { Theme } from "@/assets/theme/theme";
@@ -86,43 +87,7 @@ const SignUp = () => {
       Alert.alert("Error", err.errors[0].longMessage);
     }
   };
-  // const onPressVerify = async () => {
-  //   if (!isLoaded) return;
-  //   try {
-  //     const completeSignUp = await signUp.attemptEmailAddressVerification({
-  //       code: verification.code,
-  //     });
-  //     if (completeSignUp.status === "complete") {
-  //       await fetchAPI("/(api)/user", {
-  //         method: "POST",
-  //         body: JSON.stringify({
-  //           name: values.name,
-  //           email: values.email,
-  //           clerkId: completeSignUp.createdUserId,
-  //         }),
-  //       });
-  //       await setActive({ session: completeSignUp.createdSessionId });
-  //       setVerification({
-  //         ...verification,
-  //         state: "success",
-  //       });
-  //     } else {
-  //       setVerification({
-  //         ...verification,
-  //         error: "Verification failed. Please try again.",
-  //         state: "failed",
-  //       });
-  //     }
-  //   } catch (err: any) {
-  //     // See https://clerk.com/docs/custom-flows/error-handling
-  //     // for more info on error handling
-  //     setVerification({
-  //       ...verification,
-  //       error: err.errors[0].longMessage,
-  //       state: "failed",
-  //     });
-  //   }
-  // };
+ 
 
 
 
@@ -150,12 +115,18 @@ const SignUp = () => {
     if (Object.keys(validationErrors).length === 0) {
       // No errors, proceed with sign-up
       console.log("values submitted successfully!", values);
+      onSignUpPress()
       router.replace("/(auth)/otp")
     }
   };
 
   return (
-    <SafeAreaView
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    style={{ flex: 1 }}
+  >
+       <ScrollView>
+  <SafeAreaView
       style={{
         display: "flex",
         backgroundColor: theme.colors.background,
@@ -164,7 +135,7 @@ const SignUp = () => {
       }}
     >
       <View style={{ width: "100%", display: "flex", alignItems: "center" }}>
-        <SignUpIcon />
+        <LoginIcon />
 
       </View>
       <Text style={{ fontFamily: "Outfit500", fontSize: 24, marginBottom: 16 }}>Create an Account </Text>
@@ -233,7 +204,6 @@ const SignUp = () => {
           <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>Login</Text>
         </TouchableOpacity>
       </View>
-      {/* <SuccessModal showSuccessModal={showSuccessModal} onClose={ /> */}
       <Portal>
         <Modal visible={showSuccessModal} onDismiss={() => setShowSuccessModal(false)} contentContainerStyle={{backgroundColor: Theme.schemes.dark.surfaceContainer, padding: 20, margin:20, borderRadius:12}} >
           <Text>Example Modal.  Click outside this area to dismiss.</Text>
@@ -242,6 +212,12 @@ const SignUp = () => {
 
 
     </SafeAreaView >
+    </ScrollView>
+  </KeyboardAvoidingView>
+
+ 
+
+  
   );
 };
 

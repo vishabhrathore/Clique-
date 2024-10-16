@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { InputFieldProps } from "@/types/type";
 import { Theme } from "@/assets/theme/theme";
+import { HelperText } from "react-native-paper";
 
 const TextField = ({
     label,
@@ -22,6 +23,7 @@ const TextField = ({
     containerStyle,
     inputStyle,
     iconStyle,
+    helperText,
     ...props
 }: InputFieldProps) => {
     const colorScheme = useColorScheme() || "light"; // Default to 'light' if undefined
@@ -43,7 +45,13 @@ const TextField = ({
                             {...props}
                         />
                     </View>
+                    {props.error && (
+            <HelperText type="error" visible={props.error}>
+              {helperText}
+            </HelperText>
+          )}
                 </View>
+     
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );

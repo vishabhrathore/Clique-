@@ -8,7 +8,7 @@ const Home = () => {
     return <Redirect href={'/(root)/(tabs)/chat'} />
   }
 
-  return <Redirect href="/(auth)/welcome" />;
+  return <Redirect href="/(root)/(tabs)/chat" />;
 };
 
 export default Home;

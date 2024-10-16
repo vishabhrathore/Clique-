@@ -59,7 +59,7 @@ const OnBoarding = () => {
           alignSelf: "center",
         }}
       >
-        <CustomButton onPress={handleNext}>
+        <CustomButton textVariant="white" onPress={handleNext}>
           {data.onboarding[currentIndex].buttonText}
         </CustomButton>
       </View>

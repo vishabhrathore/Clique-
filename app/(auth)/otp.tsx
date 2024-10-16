@@ -1,6 +1,6 @@
 
 
-import React from 'react'
+import React, { useState } from 'react'
 import { IconButton, Text, useTheme } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StyleSheet, useColorScheme, View } from 'react-native';
@@ -8,11 +8,52 @@ import { Theme } from '@/assets/theme/theme';
 import { OtpInput } from 'react-native-otp-entry';
 import OtpView from '@/assets/icons/OtpIcon';
 import OtpIcon from '@/assets/icons/OtpIcon';
+import { useSignUp } from '@clerk/clerk-expo';
 
 const Otp = () => {
     const theme =  useTheme()
     const colorScheme = useColorScheme() || "light"; // Default to 'light' if undefined
     const styles = getStyles(colorScheme); // Pass the resolved color scheme
+  const { isLoaded, signUp, setActive } = useSignUp()
+
+    const [verification, setVerification] = useState({
+      state: "default",
+      error: "",
+      code: "",
+    });
+
+
+    const onPressVerify = async (code : string) => {
+      if (!isLoaded) return;
+      try {
+        const completeSignUp = await signUp.attemptEmailAddressVerification({
+          code: code,
+        });
+        if (completeSignUp.status === "complete") {
+        
+          await setActive({ session: completeSignUp.createdSessionId });
+          setVerification({
+            ...verification,
+            state: "success",
+          });
+        } else {
+          setVerification({
+            ...verification,
+            error: "Verification failed. Please try again.",
+            state: "failed",
+          });
+        }
+      } catch (err: any) {
+        // See https://clerk.com/docs/custom-flows/error-handling
+        // for more info on error handling
+        setVerification({
+          ...verification,
+          error: err.errors[0].longMessage,
+          state: "failed",
+        });
+      }
+    };
+    console.log(verification)
   return (
     <SafeAreaView
     style={{
@@ -40,10 +81,14 @@ const Otp = () => {
 
         <OtpInput
   numberOfDigits={6}
-  focusColor="green"
+  focusColor="#9676dd"
   focusStickBlinkingDuration={500}
-  onTextChange={(text) => console.log(text)}
-  onFilled={(text) => console.log(`OTP is ${text}`)}
+  onTextChange={(text) => setVerification({...verification, code: text})}
+  onFilled={(text) => {
+    setTimeout(()=>{
+      onPressVerify(text)
+    },2000)
+  }}
   textInputProps={{
     accessibilityLabel: "One-Time Password",
   }}
