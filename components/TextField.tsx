@@ -46,12 +46,12 @@ const TextField = ({
                         />
                     </View>
                     {props.error && (
-            <HelperText type="error" visible={props.error}>
-              {helperText}
-            </HelperText>
-          )}
+                        <HelperText type="error" visible={props.error}>
+                            {helperText}
+                        </HelperText>
+                    )}
                 </View>
-     
+
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );
@@ -66,7 +66,7 @@ const getStyles = (colorScheme: "light" | "dark") =>
         inputContainer: {
             flexDirection: "row",
             alignItems: "center",
-            backgroundColor: colorScheme === "dark" ? "#1D1A21" : "#f5f5f5", // Dynamic background
+            backgroundColor: colorScheme === "dark" ? Theme.schemes.dark.surfaceContainer : "#f5f5f5", // Dynamic background
             borderRadius: 12,
             borderWidth: 1,
             borderColor: colorScheme === "dark" ? "#1D1A21" : "#f5f5f5", // Dynamic border
