@@ -1,128 +1,184 @@
 import { Theme } from '@/assets/theme/theme';
 import { formatTimestamp } from '@/lib/logics';
+import { ChatItemProps } from '@/types/type';
 import React, { useState } from 'react';
-import { View, Image, Text, StyleSheet, useColorScheme, Dimensions } from 'react-native';
-import { Badge, Chip, useTheme } from 'react-native-paper';
+import { View, Image, Text, StyleSheet, useColorScheme, Dimensions, Pressable, Vibration } from 'react-native';
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Badge, Icon, IconButton, useTheme } from 'react-native-paper';
+import { ThemeProp } from 'react-native-paper/lib/typescript/types';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming } from 'react-native-reanimated';
 
-interface LastMessage {
-    text: string;
-    timestamp: string;
-    isRead: boolean;
-}
+const screenWidth = Dimensions.get('window').width;
 
-interface Item {
-    id: number;
-    name: string;
-    avatar: string;
-    lastMessage: LastMessage;
-    unreadCount: number;
-}
-
-interface ChatItemProps {
-    item: Item;
-}
-
-const ChatItem: React.FC<ChatItemProps> = ({ item }) => {
-    const colorScheme = useColorScheme() || "light"; // Default to 'light' if undefined
+const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
+    const colorScheme = useColorScheme() || 'light';
     const [textWidth, setTextWidth] = useState(0);
-
-    const screenWidth = Dimensions.get('window').width;
-    const styles = getStyles(colorScheme);
     const theme = useTheme();
+    const styles = getStyles(colorScheme, theme);
+
+
+    // Shared values for animation
+    const scale = useSharedValue(1);
+    // const translateY = useSharedValue(0);
+    const paddingHorizontal = useSharedValue(12);
+    const translateX = useSharedValue(0); // Horizontal movement for sliding
+    const isDeleted = useSharedValue(false); // Flag to mark the deletion state
+    const TRANSLATE_X_THRESHLOD = - screenWidth * 0.3
+
+    // Animated styles
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [
+            { scale: scale.value },
+            // { translateY: translateY.value },
+            { translateX: translateX.value },
+        ],
+        paddingHorizontal: paddingHorizontal.value,
+        opacity: 1, // Fade out when deleted
+    }));
+
+    const handleLongPressIn = () => {
+        scale.value = withSpring(1.03); // Scale up on long press
+        // translateY.value = withSpring(-10); // Float upwards slightly
+        paddingHorizontal.value = withSpring(10);
+    };
+
+    const handleLongPressOut = () => {
+        scale.value = withSpring(1); // Return to original scale
+        // translateY.value = withSpring(0); // Reset position
+        paddingHorizontal.value = withSpring(12);
+    };
 
     const handleTextLayout = (event: any) => {
         const { width } = event.nativeEvent.layout;
         setTextWidth(width);
     };
-    console.log("render", item.id)
 
+    const deleteItem = () => {
+        if (onDelete) {
+            console.log(item.id)
+            onDelete(); // Call the delete function passed via props
+        }
+    };
+
+    // Gesture for sliding
+    const panGesture = Gesture.Pan()
+        // .activateAfterLongPress(1)
+        .onUpdate((event) => {
+            translateX.value = event.translationX;
+
+            // If user slides beyond -150 px, mark for deletion
+            // if (translateX.value < -150) {
+            //     runOnJS(deleteItem)(); // Trigger deletion via JS
+            // }
+        })
+        .onEnd(() => {
+            // Reset position if not deleted
+            console.log(translateX.value)
+            const shouldDismissed = translateX.value < TRANSLATE_X_THRESHLOD
+            console.log(shouldDismissed)
+            if (shouldDismissed) {
+                translateX.value = withTiming(-screenWidth)
+                runOnJS(deleteItem)()
+            } else {
+                translateX.value = withSpring(0)
+            }
+        });
 
     return (
-        <View style={{
-            marginVertical: 12,
-            display: "flex",
-            flexDirection: "row",
-            gap: 12,
-        }}>
-            <Image
-                source={{ uri: item.avatar }}
-                style={styles.avatar} // Ensure styles.avatar is defined
-                resizeMode="contain"
-            />
-            <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-                <View style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between"
-                }}>
-                    <Text
-                        style={{
-                            fontFamily: "Outfit",
-                            fontSize: 18,
-                            overflow: 'hidden', // Hide overflow text
-                            color: theme.colors.onSurface,
-                            flexBasis: screenWidth - textWidth - 90
-                        }}
-                        numberOfLines={1} // Truncate the name if it's too long
-                        ellipsizeMode="tail"
-                    >
-                        {item.name}
-                    </Text>
-
-                    <Text
-                        style={{
-                            fontFamily: "Outfit",
-                            fontSize: 12,
-                            color: theme.colors.outline,
-                            alignSelf: "center",
-                            marginLeft: "auto"
-                        }}
-                        onLayout={handleTextLayout}
-
-                    >
-                        {formatTimestamp(item.lastMessage.timestamp)}
-                    </Text>
-                </View>
-
-                <View style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between"
-                }}>
-
-
-                    <Text
-                        style={{
-                            fontFamily: "Outfit",
-                            fontSize: 16,
-                            color: theme.colors.outline,
-                            overflow: 'hidden',
-                            flexBasis: screenWidth - String(item.unreadCount).length - 106
-
-                        }}
-                        numberOfLines={1} // Truncate the last message if it's too long
-                        ellipsizeMode="tail"
-
-                    >
-                        {item.lastMessage.text}
-
-                    </Text>
-                    <Badge
-                        style={{ backgroundColor: theme.colors.secondaryContainer, color: theme.colors.primary, fontSize: 12 }}  // Change background color
-                    >{item.unreadCount}</Badge>
-                </View>
+        <GestureHandlerRootView style={styles.main}>
+            <View style={styles.iconContainer}>
+                <IconButton
+                    icon="trash-can" // You can use 'delete' if 'trash-can' is not available
+                    iconColor={theme.colors.errorContainer}
+                    size={24} // Set the size of the icon
+                />
             </View>
-        </View>
+            <GestureDetector gesture={panGesture}>
+                <Animated.View style={[styles.container, animatedStyle]}>
+                    {/* <Pressable onLongPress={handleLongPressIn}
+                    //  onPressOut={handleLongPressOut} */}
+                    {/* > */}
+                    <View style={{ marginVertical: 12, display: 'flex', flexDirection: 'row', gap: 12 }}>
+                        <Image source={{ uri: item.avatar }} style={styles.avatar} resizeMode="contain" />
+                        <View style={{ flex: 1 }}>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text
+                                    style={{
+                                        fontFamily: 'Outfit',
+                                        fontSize: 18,
+                                        overflow: 'hidden',
+                                        color: theme.colors.onSurface,
+                                        flexBasis: screenWidth - textWidth - 90,
+                                    }}
+                                    numberOfLines={1}
+                                    ellipsizeMode="tail"
+                                >
+                                    {item.name}
+                                </Text>
+
+                                <Text
+                                    style={{
+                                        fontFamily: 'Outfit',
+                                        fontSize: 12,
+                                        color: theme.colors.outline,
+                                        marginLeft: 'auto',
+                                    }}
+                                    onLayout={handleTextLayout}
+                                >
+                                    {formatTimestamp(item.lastMessage.timestamp)}
+                                </Text>
+                            </View>
+
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text
+                                    style={{
+                                        fontFamily: 'Outfit',
+                                        fontSize: 16,
+                                        color: theme.colors.outline,
+                                        overflow: 'hidden',
+                                        flexBasis: screenWidth - String(item.unreadCount).length - 106,
+                                    }}
+                                    numberOfLines={1}
+                                    ellipsizeMode="tail"
+                                >
+                                    {item.lastMessage.text}
+                                </Text>
+                                <Badge
+                                    style={{
+                                        backgroundColor: theme.colors.secondaryContainer,
+                                        color: theme.colors.primary,
+                                        fontSize: 12,
+                                    }}
+                                >
+                                    {item.unreadCount}
+                                </Badge>
+                            </View>
+                        </View>
+                    </View>
+                    {/* </Pressable> */}
+                </Animated.View>
+            </GestureDetector>
+
+        </GestureHandlerRootView>
+
     );
 };
 
 export default ChatItem;
 
-// Dynamically create styles based on color scheme
-const getStyles = (colorScheme: "light" | "dark") =>
+// Add your dynamic styles here as in the original code
+const getStyles = (colorScheme: "light" | "dark", theme: ThemeProp) =>
     StyleSheet.create({
+        iconContainer: {
+            position: "absolute",
+            right: "5%",
+
+        },
+        main: {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
         icon: {
             height: 44,
             width: 44,
@@ -160,6 +216,9 @@ const getStyles = (colorScheme: "light" | "dark") =>
         },
         container: {
             width: "100%",
+            paddingHorizontal: 12,
+            backgroundColor: theme.colors?.background
+
         },
         unselectFIlter: {
             backgroundColor: colorScheme === "dark" ? "#1D1A21" : "#f5f5f5", // Dynamic background
