@@ -1,119 +1,63 @@
-import React from 'react';
-import { Text, StyleSheet, View, Animated } from 'react-native';
-import { GestureHandlerRootView, RectButton } from 'react-native-gesture-handler';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
+/** *
+Sample list for web
+ */
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, Pressable, StyleSheet } from "react-native";
+import { FlashList, ListRenderItemInfo } from "@shopify/flash-list";
 
-interface ChatItemProps {
-    chatName: string;
-    onArchive: () => void;
-    onDelete: () => void;
-}
-
-const ChatItem: React.FC<ChatItemProps> = ({ chatName, onArchive, onDelete }) => {
-    const renderLeftActions = (
-        progress: any,
-        dragX: any
-    ) => {
-        const trans = dragX.interpolate({
-            inputRange: [0, 100],
-            outputRange: [0.8, 1], // Valid scale values
-        });
-
-        return (
-            <Animated.View style={[styles.leftAction, { transform: [{ scale: trans }] }]}>
-                <RectButton style={styles.actionButton} onPress={onArchive}>
-                    <Text style={styles.actionText}>Archive</Text>
-                </RectButton>
-            </Animated.View>
-        );
-    };
-
-    const renderRightActions = (
-        progress: any,
-        dragX: any
-    ) => {
-        const trans = dragX.interpolate({
-            inputRange: [-100, 0],
-            outputRange: [0.8, 1], // Valid scale values
-        });
-
-        return (
-            <Animated.View style={[styles.rightAction, { transform: [{ scale: trans }] }]}>
-                <RectButton style={styles.actionButton} onPress={onDelete}>
-                    <Text style={styles.actionText}>Delete</Text>
-                </RectButton>
-            </Animated.View>
-        );
-    };
-
+const ListItem = ({ index }: { index: string }) => {
+    const [height, setHeight] = useState(100);
+    useEffect(() => {
+        setHeight(100);
+    }, [index]);
     return (
-        <GestureHandlerRootView>
-            <Swipeable
-                renderLeftActions={renderLeftActions}
-                renderRightActions={renderRightActions}
-            >
-                <View style={styles.chatItem}>
-                    <Text>{chatName}</Text>
-                </View>
-            </Swipeable>
-        </GestureHandlerRootView>
+        <Pressable
+            onPress={() => {
+                if (height === 100) {
+                    setHeight(200);
+                } else {
+                    setHeight(100);
+                }
+            }}
+            style={{ height }}
+        >
+            <View style={styles.container}>
+                <Text>
+                    Web Item: {index}, size: {height}
+                </Text>
+            </View>
+        </Pressable>
     );
 };
 
-const ChatList: React.FC = () => {
-    const handleArchive = (chat: string) => {
-        console.log(`${chat} archived`);
-        // Add archive logic here
+const ChatList = () => {
+    const flashListRef = useRef<FlashList<number>>(null);
+    const renderItem = ({ index }: ListRenderItemInfo<number>) => {
+        return <ListItem index={index.toString()} />;
     };
-
-    const handleDelete = (chat: string) => {
-        console.log(`${chat} deleted`);
-        // Add delete logic here
-    };
-
-    const chats = ['Chat 1', 'Chat 2', 'Chat 3'];
 
     return (
-        <View>
-            {chats.map((chat, index) => (
-                <ChatItem
-                    key={index}
-                    chatName={chat}
-                    onArchive={() => handleArchive(chat)}
-                    onDelete={() => handleDelete(chat)}
-                />
-            ))}
-        </View>
+        <FlashList
+            ref={flashListRef}
+            renderItem={renderItem}
+            estimatedItemSize={150}
+            stickyHeaderIndices={[0, 3, 6, 7, 9]}
+            data={new Array<number>(100)}
+            ListFooterComponent={<ListItem index="Footer" />}
+            ListHeaderComponent={<ListItem index="Header" />}
+        />
     );
 };
-
-const styles = StyleSheet.create({
-    chatItem: {
-        padding: 20,
-        backgroundColor: 'red',
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    leftAction: {
-        backgroundColor: 'green',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        flex: 1,
-    },
-    rightAction: {
-        backgroundColor: 'red',
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        flex: 1,
-    },
-    actionButton: {
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-    },
-    actionText: {
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-});
 
 export default ChatList;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "cyan",
+        borderWidth: 2,
+        borderColor: "white",
+        alignItems: "center",
+        justifyContent: "space-around",
+    },
+});
