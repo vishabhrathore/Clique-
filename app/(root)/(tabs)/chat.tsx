@@ -12,6 +12,8 @@ import { formatTimestamp } from '@/lib/logics';
 import ChatItem from '@/components/ChatItem';
 import { useState } from 'react';
 import Animated, { LinearTransition } from 'react-native-reanimated';
+import MistParticlesAnimation from '@/components/Mist';
+import { NavIcons } from '@/constants';
 
 
 
@@ -73,105 +75,105 @@ export default function Page() {
         },
         "unreadCount": 0
       },
-      // {
-      //   "id": 5,
-      //   "name": "John Doe",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "Hey, check out this funny meme!",
-      //     "timestamp": "2024-10-20T20:30:00Z",
-      //     "isRead": false
-      //   },
-      //   "unreadCount": 1
-      // },
-      // {
-      //   "id": 7,
-      //   "name": "Emma Watson",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "Did you see the latest movie?",
-      //     "timestamp": "2024-10-21T14:22:00Z",
-      //     "isRead": false
-      //   },
-      //   "unreadCount": 2
-      // },
-      // {
-      //   "id": 8,
-      //   "name": "David Chen",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "Thanks for the birthday wishes!",
-      //     "timestamp": "2024-10-21T13:05:00Z",
-      //     "isRead": true
-      //   },
-      //   "unreadCount": 0
-      // },
-      // {
-      //   "id": 9,
-      //   "name": "Sarah Johnson",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "Can you send me the project report?",
-      //     "timestamp": "2024-10-21T11:47:00Z",
-      //     "isRead": false
-      //   },
-      //   "unreadCount": 1
-      // },
-      // {
-      //   "id": 10,
-      //   "name": "Family Group",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "Who's bringing dessert to the reunion?",
-      //     "timestamp": "2024-10-21T10:30:00Z",
-      //     "isRead": true
-      //   },
-      //   "unreadCount": 0
-      // },
-      // {
-      //   "id": 11,
-      //   "name": "Alex Thompson",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "I'm running late for our meeting, sorry!",
-      //     "timestamp": "2024-10-21T09:15:00Z",
-      //     "isRead": true
-      //   },
-      //   "unreadCount": 0
-      // },
-      // {
-      //   "id": 12,
-      //   "name": "Fitness Buddies",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "Who's up for a run this evening?",
-      //     "timestamp": "2024-10-21T08:50:00Z",
-      //     "isRead": false
-      //   },
-      //   "unreadCount": 5
-      // },
-      // {
-      //   "id": 13,
-      //   "name": "Maria Garcia",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "Check out this new recipe I found!",
-      //     "timestamp": "2024-10-20T22:30:00Z",
-      //     "isRead": true
-      //   },
-      //   "unreadCount": 0
-      // },
-      // {
-      //   "id": 14,
-      //   "name": "Tech Support",
-      //   "avatar": faker.image.avatar(),
-      //   "lastMessage": {
-      //     "text": "Your ticket has been resolved. Please confirm.",
-      //     "timestamp": "2024-10-20T20:15:00Z",
-      //     "isRead": false
-      //   },
-      //   "unreadCount": 1
-      // }
+      {
+        "id": 5,
+        "name": "John Doe",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "Hey, check out this funny meme!",
+          "timestamp": "2024-10-20T20:30:00Z",
+          "isRead": false
+        },
+        "unreadCount": 1
+      },
+      {
+        "id": 7,
+        "name": "Emma Watson",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "Did you see the latest movie?",
+          "timestamp": "2024-10-21T14:22:00Z",
+          "isRead": false
+        },
+        "unreadCount": 2
+      },
+      {
+        "id": 8,
+        "name": "David Chen",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "Thanks for the birthday wishes!",
+          "timestamp": "2024-10-21T13:05:00Z",
+          "isRead": true
+        },
+        "unreadCount": 0
+      },
+      {
+        "id": 9,
+        "name": "Sarah Johnson",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "Can you send me the project report?",
+          "timestamp": "2024-10-21T11:47:00Z",
+          "isRead": false
+        },
+        "unreadCount": 1
+      },
+      {
+        "id": 10,
+        "name": "Family Group",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "Who's bringing dessert to the reunion?",
+          "timestamp": "2024-10-21T10:30:00Z",
+          "isRead": true
+        },
+        "unreadCount": 0
+      },
+      {
+        "id": 11,
+        "name": "Alex Thompson",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "I'm running late for our meeting, sorry!",
+          "timestamp": "2024-10-21T09:15:00Z",
+          "isRead": true
+        },
+        "unreadCount": 0
+      },
+      {
+        "id": 12,
+        "name": "Fitness Buddies",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "Who's up for a run this evening?",
+          "timestamp": "2024-10-21T08:50:00Z",
+          "isRead": false
+        },
+        "unreadCount": 5
+      },
+      {
+        "id": 13,
+        "name": "Maria Garcia",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "Check out this new recipe I found!",
+          "timestamp": "2024-10-20T22:30:00Z",
+          "isRead": true
+        },
+        "unreadCount": 0
+      },
+      {
+        "id": 14,
+        "name": "Tech Support",
+        "avatar": faker.image.avatar(),
+        "lastMessage": {
+          "text": "Your ticket has been resolved. Please confirm.",
+          "timestamp": "2024-10-20T20:15:00Z",
+          "isRead": false
+        },
+        "unreadCount": 1
+      }
     ]
 
   const [data, setdata] = useState(DATA)
@@ -249,16 +251,21 @@ export default function Page() {
 
 
       <View style={{ backgroundColor: "transparent", flex: 1, }}>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item.id.toString()} // Convert id to string
-          renderItem={({ item }) => (
-            <ChatItem item={item} onDelete={() => { setdata(data.filter(currentItem => item.id !== currentItem.id)) }} />
-          )}
-        // itemLayoutAnimation={LinearTransition}
-        />
+        <ScrollView>
+
+          <Animated.FlatList
+            data={data}
+            keyExtractor={(item) => item.id.toString()} // Convert id to string
+            renderItem={({ item }) => (
+              <ChatItem item={item} onDelete={() => { }} />
+            )}
+            scrollEnabled={false}
+            itemLayoutAnimation={LinearTransition}
+          />
+        </ScrollView>
 
       </View>
+      {/* <MistParticlesAnimation /> */}
     </SafeAreaView>
 
   )

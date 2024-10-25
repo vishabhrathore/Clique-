@@ -1,12 +1,31 @@
+import CallIcon from "@/assets/icons/CallIcon";
+import CallIconFilled from "@/assets/icons/CallIconFilled";
+import MessageIcon from "@/assets/icons/MessageIcon";
+import MessageOutlineIcon from "@/assets/icons/MessageOutlineIcon";
 import OnBoarding1 from "@/assets/icons/onboarding1";
 import OnBoarding2 from "@/assets/icons/onboarding2";
 import OnBoarding3 from "@/assets/icons/onboarding3";
+import SettingIcon from "@/assets/icons/Setting";
+import SettingOutline from "@/assets/icons/SettingOutline";
+import StatusIcon from "@/assets/icons/StatusIcon";
+import StatusOutlineIcon from "@/assets/icons/StatusOutlineIcon";
 import { OnboardingData } from "@/types/type";
 
 export const ScreenIcons = {
   OnBoarding1,
   OnBoarding2,
   OnBoarding3,
+};
+
+export const NavIcons = {
+  chatOutline: MessageOutlineIcon,
+  chatFilled: MessageIcon,
+  statusOutline: StatusOutlineIcon,
+  statusFilled: StatusIcon,
+  callOutline: CallIcon,
+  callFilled: CallIconFilled,
+  settingOutline: SettingOutline,
+  settingFilled: SettingIcon,
 };
 
 export const onboarding: OnboardingData[] = [

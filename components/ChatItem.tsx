@@ -3,38 +3,61 @@ import { formatTimestamp } from '@/lib/logics';
 import { ChatItemProps } from '@/types/type';
 import React, { useState } from 'react';
 import { View, Image, Text, StyleSheet, useColorScheme, Dimensions, Pressable, Vibration } from 'react-native';
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector, GestureHandlerRootView, TapGestureHandler } from 'react-native-gesture-handler';
 import { Badge, Icon, IconButton, useTheme } from 'react-native-paper';
 import { ThemeProp } from 'react-native-paper/lib/typescript/types';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming, interpolateColor, Easing } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 const screenWidth = Dimensions.get('window').width;
 
+
+
+
 const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
     const colorScheme = useColorScheme() || 'light';
-    const [textWidth, setTextWidth] = useState(0);
     const theme = useTheme();
     const styles = getStyles(colorScheme, theme);
 
+    const [textWidth, setTextWidth] = useState(0);
 
     // Shared values for animation
     const scale = useSharedValue(1);
-    // const translateY = useSharedValue(0);
+    const translateY = useSharedValue(0);
     const paddingHorizontal = useSharedValue(12);
     const translateX = useSharedValue(0); // Horizontal movement for sliding
     const isDeleted = useSharedValue(false); // Flag to mark the deletion state
     const TRANSLATE_X_THRESHLOD = - screenWidth * 0.3
 
     // Animated styles
-    const animatedStyle = useAnimatedStyle(() => ({
-        transform: [
-            { scale: scale.value },
-            // { translateY: translateY.value },
-            { translateX: translateX.value },
-        ],
-        paddingHorizontal: paddingHorizontal.value,
-        opacity: 1, // Fade out when deleted
-    }));
+
+    // Animated styles
+
+    const rIconAnimatedStyle = useAnimatedStyle(() => {
+        const backgroundColor = interpolateColor(
+            translateX.value,
+            [-screenWidth, 0],
+            [theme.colors.onErrorContainer, theme.colors.background]
+        );
+        return {
+            backgroundColor
+        }
+    })
+
+    const animatedStyle = useAnimatedStyle(() => {
+
+        // Return the animated styles
+        return {
+            transform: [
+                { scale: scale.value },
+                { translateY: translateY.value },
+                { translateX: translateX.value },
+            ],
+            paddingHorizontal: paddingHorizontal.value,
+            opacity: 1, // You can adjust this for fade-out effect
+        };
+    });
+
 
     const handleLongPressIn = () => {
         scale.value = withSpring(1.03); // Scale up on long press
@@ -44,7 +67,7 @@ const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
 
     const handleLongPressOut = () => {
         scale.value = withSpring(1); // Return to original scale
-        // translateY.value = withSpring(0); // Reset position
+        translateY.value = withSpring(0); // Reset position?
         paddingHorizontal.value = withSpring(12);
     };
 
@@ -60,16 +83,25 @@ const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
         }
     };
 
+    const vibrate = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+
     // Gesture for sliding
     const panGesture = Gesture.Pan()
         // .activateAfterLongPress(1)
+        .activateAfterLongPress(300)
+        .onStart(() => {
+            scale.value = withSpring(1.03); // Scale up on long press
+            translateY.value = withSpring(0); // Float upwards slightly
+            paddingHorizontal.value = withSpring(10);
+            runOnJS(vibrate)()
+        })
         .onUpdate((event) => {
-            translateX.value = event.translationX;
 
-            // If user slides beyond -150 px, mark for deletion
-            // if (translateX.value < -150) {
-            //     runOnJS(deleteItem)(); // Trigger deletion via JS
-            // }
+            if (event.translationX < 10) {
+                translateX.value = event.translationX;
+            }
         })
         .onEnd(() => {
             // Reset position if not deleted
@@ -81,23 +113,24 @@ const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
                 runOnJS(deleteItem)()
             } else {
                 translateX.value = withSpring(0)
+                scale.value = withSpring(1); // Return to original scale
+                translateY.value = withSpring(0); // Reset position?
+                paddingHorizontal.value = withSpring(12);
             }
         });
 
     return (
         <GestureHandlerRootView style={styles.main}>
-            <View style={styles.iconContainer}>
+            <Animated.View style={[styles.iconContainer, rIconAnimatedStyle]}>
                 <IconButton
                     icon="trash-can" // You can use 'delete' if 'trash-can' is not available
                     iconColor={theme.colors.errorContainer}
                     size={24} // Set the size of the icon
                 />
-            </View>
+            </Animated.View >
             <GestureDetector gesture={panGesture}>
                 <Animated.View style={[styles.container, animatedStyle]}>
-                    {/* <Pressable onLongPress={handleLongPressIn}
-                    //  onPressOut={handleLongPressOut} */}
-                    {/* > */}
+
                     <View style={{ marginVertical: 12, display: 'flex', flexDirection: 'row', gap: 12 }}>
                         <Image source={{ uri: item.avatar }} style={styles.avatar} resizeMode="contain" />
                         <View style={{ flex: 1 }}>
@@ -133,7 +166,7 @@ const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
                                 <Text
                                     style={{
                                         fontFamily: 'Outfit',
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         color: theme.colors.outline,
                                         overflow: 'hidden',
                                         flexBasis: screenWidth - String(item.unreadCount).length - 106,
@@ -169,6 +202,13 @@ export default ChatItem;
 // Add your dynamic styles here as in the original code
 const getStyles = (colorScheme: "light" | "dark", theme: ThemeProp) =>
     StyleSheet.create({
+        particle: {
+            position: 'absolute',
+            width: 30,
+            height: 30,
+            backgroundColor: 'rgba(255, 255, 255, 0.1)', // Light, semi-transparent color
+            borderRadius: 15, // Makes the particles circular
+        },
         iconContainer: {
             position: "absolute",
             right: "5%",

@@ -8,9 +8,9 @@ interface CustomIconProps {
 }
 
 const SettingIcon: React.FC<CustomIconProps & SvgProps> = ({
-  width = 32,
-  height = 32,
-  color = "currentColor",
+  width = 28,
+  height = 28,
+  color = "red",
   ...props
 }) => (
   <Svg
