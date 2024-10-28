@@ -1,6 +1,6 @@
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
-import { FlatList, Image, ScrollView, StyleSheet, useColorScheme, View } from 'react-native'
-import { Badge, Chip, List, Text, useTheme } from 'react-native-paper'
+import { useUser } from '@clerk/clerk-expo'
+import { Image, ScrollView, StyleSheet, useColorScheme, View } from 'react-native'
+import { Chip, Text, useTheme } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { faker } from "@faker-js/faker";
 import { Theme } from '@/assets/theme/theme'
@@ -8,12 +8,9 @@ import NotificationIcon from '@/components/NotificationIcon'
 import CustomIconButton from '@/components/IconButton'
 import MenuIcon from '@/components/MenuIcon';
 import TextField from '@/components/TextField';
-import { formatTimestamp } from '@/lib/logics';
 import ChatItem from '@/components/ChatItem';
 import { useState } from 'react';
 import Animated, { LinearTransition } from 'react-native-reanimated';
-import MistParticlesAnimation from '@/components/Mist';
-import { NavIcons } from '@/constants';
 
 
 
@@ -182,10 +179,10 @@ export default function Page() {
   const styles = getStyles(colorScheme);
 
   return (
-    <SafeAreaView style={{
+    <SafeAreaView style={[{
       backgroundColor: theme.colors.background,
       flex: 1
-    }}>
+    }, StyleSheet.absoluteFill]}>
 
 
       <View style={{ padding: 12, }}>
@@ -252,7 +249,6 @@ export default function Page() {
 
       <View style={{ backgroundColor: "transparent", flex: 1, }}>
         <ScrollView>
-
           <Animated.FlatList
             data={data}
             keyExtractor={(item) => item.id.toString()} // Convert id to string
@@ -299,7 +295,7 @@ const getStyles = (colorScheme: "light" | "dark") =>
       flexDirection: "row",
       alignItems: "center",
       gap: 8,
-      marginLeft: "auto"
+      marginLeft: "auto",
     },
     avatar: {
       width: 48,

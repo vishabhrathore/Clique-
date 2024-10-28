@@ -10,6 +10,7 @@ import SettingOutline from "@/assets/icons/SettingOutline";
 import StatusIcon from "@/assets/icons/StatusIcon";
 import StatusOutlineIcon from "@/assets/icons/StatusOutlineIcon";
 import { OnboardingData } from "@/types/type";
+import { SvgProps } from "react-native-svg";
 
 export const ScreenIcons = {
   OnBoarding1,
@@ -18,14 +19,48 @@ export const ScreenIcons = {
 };
 
 export const NavIcons = {
-  chatOutline: MessageOutlineIcon,
-  chatFilled: MessageIcon,
-  statusOutline: StatusOutlineIcon,
-  statusFilled: StatusIcon,
-  callOutline: CallIcon,
-  callFilled: CallIconFilled,
-  settingOutline: SettingOutline,
-  settingFilled: SettingIcon,
+  ChatOutline: MessageOutlineIcon,
+  ChatFilled: MessageIcon,
+  StatusOutline: StatusOutlineIcon,
+  StatusFilled: StatusIcon,
+  CallOutline: CallIcon,
+  CallFilled: CallIconFilled,
+  SettingOutline: SettingOutline,
+  SettingFilled: SettingIcon,
+};
+
+type RouteName = "chat" | "update" | "call" | "profile";
+
+// Define the icon map interface
+
+interface CustomIconProps {
+  width?: number;
+  height?: number;
+  color?: string;
+}
+interface IconMap {
+  activeIcon: React.FC<CustomIconProps & SvgProps>;
+  inactiveIcon: React.FC<CustomIconProps & SvgProps>;
+}
+
+// Define the NavIconRouteMap type based on allowed routes
+export const NavIconRouteMap: Record<RouteName, IconMap> = {
+  chat: {
+    activeIcon: NavIcons.ChatFilled,
+    inactiveIcon: NavIcons.ChatOutline,
+  },
+  update: {
+    activeIcon: NavIcons.StatusFilled,
+    inactiveIcon: NavIcons.StatusOutline,
+  },
+  call: {
+    activeIcon: NavIcons.CallFilled,
+    inactiveIcon: NavIcons.CallOutline,
+  },
+  profile: {
+    activeIcon: NavIcons.SettingFilled,
+    inactiveIcon: NavIcons.SettingOutline,
+  },
 };
 
 export const onboarding: OnboardingData[] = [
