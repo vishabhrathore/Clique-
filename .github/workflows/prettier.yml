@@ -1,0 +1,42 @@
+name: Prettier Check
+
+on:
+  pull_request:
+    paths:
+      - "**/*.js"
+      - "**/*.ts"
+      - "**/*.jsx"
+      - "**/*.tsx"
+      - "**/*.json"
+      - "**/*.css"
+  push:
+    branches:
+      - main # Change this to your default branch, if different
+    paths:
+      - "**/*.js"
+      - "**/*.ts"
+      - "**/*.jsx"
+      - "**/*.tsx"
+      - "**/*.json"
+      - "**/*.css"
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22.11.0" # You can specify your current Node.js version here (or switch to LTS like 18)
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run Prettier
+        run: |
+          npx prettier --check .
