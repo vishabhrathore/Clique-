@@ -8,7 +8,6 @@ import {
 import { InputFieldProps } from "@/types/type";
 import { HelperText, Text, TextInput, useTheme } from "react-native-paper";
 
-
 const InputField = ({
   label,
   leftIcon,
@@ -29,16 +28,17 @@ const InputField = ({
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flexDirection: "column", width: "100%", borderRadius: 8 }}>
+        <View
+          style={{ flexDirection: "column", width: "100%", borderRadius: 8 }}
+        >
           {/* <Text style={[{ marginBottom: 4, color: "#9676dd" }, labelStyle]}>
             {label}
           </Text> */}
           <View style={[{ width: "100%" }, containerStyle]}>
             <TextInput
-
               mode="flat"
               underlineStyle={{
-                borderRadius: 12
+                borderRadius: 12,
               }}
               secureTextEntry={secureTextEntry}
               // activeUnderlineColor="transparent"
@@ -68,7 +68,7 @@ const InputField = ({
               right={
                 rightIcon ? (
                   <TextInput.Icon
-                    onPress={onPressRightIcon ? onPressRightIcon : () => { }}
+                    onPress={onPressRightIcon ? onPressRightIcon : () => {}}
                     icon={
                       typeof rightIcon === "string"
                         ? rightIcon

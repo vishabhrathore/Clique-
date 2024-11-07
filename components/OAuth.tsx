@@ -1,5 +1,11 @@
 import { router } from "expo-router";
-import { Alert, Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import CustomButton from "./CustomButton";
 import GoogleIcon from "@/assets/icons/GoogleIcon";
 import { Text } from "react-native-paper";
@@ -21,11 +27,10 @@ const OAuth = () => {
 
   return (
     <View style={{ display: "flex", flexDirection: "row", gap: 16 }}>
-
       <AuthButton
         IconLeft={GoogleIcon}
         style={{
-          width: screenWidth * 0.5 - 24
+          width: screenWidth * 0.5 - 24,
         }}
       >
         Google
@@ -33,19 +38,13 @@ const OAuth = () => {
       <AuthButton
         IconLeft={AppleIcon}
         style={{
-          width: screenWidth * 0.5 - 24
-
+          width: screenWidth * 0.5 - 24,
         }}
       >
         Apple
       </AuthButton>
-
-
-
     </View>
   );
 };
 
 export default OAuth;
-
-

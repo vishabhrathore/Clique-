@@ -177,3 +177,43 @@ declare interface OnboardingData {
 interface CustomSwiperRef {
   goToNextSlide: () => void;
 }
+
+interface LastMessage {
+  text: string;
+  timestamp: string;
+  isRead: boolean;
+}
+
+declare interface ChatItem {
+  id: number;
+  name: string;
+  avatar: string;
+  lastMessage: LastMessage;
+  unreadCount: number;
+}
+
+interface ChatItemProps {
+  item: ChatItem;
+  onDelete: () => void;
+}
+
+declare interface CallData {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  duration: number;
+  time: string;
+  type: "Incoming" | "Outgoing" | "Missed";
+  callType: "Voice" | "Video";
+  isGroup: boolean;
+  avatar?: string;
+  participants?: {
+    name: string;
+    avatar: string;
+  }[];
+}
+
+declare interface CallItemProps {
+  item: CallData;
+  onDelete: () => void;
+}

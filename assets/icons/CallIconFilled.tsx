@@ -8,18 +8,12 @@ interface CustomIconProps {
 }
 
 const CallIconFilled: React.FC<CustomIconProps & SvgProps> = ({
-  width = 32,
-  height = 32,
+  width = 24,
+  height = 24,
   color = "currentColor",
   ...props
 }) => (
-  <Svg
-    width={width}
-    height={height}
-    viewBox="0 0 24 24"
-    fill="none"
-    {...props}
-  >
+  <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
     <G fill="none">
       <Path
         fill={color}

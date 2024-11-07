@@ -1,13 +1,39 @@
-import { Stack } from "expo-router";
+import React from "react";
+import { Tabs } from "expo-router";
+import TabBar from "@/components/navigation/TabBar";
 
-const Layout = () => {
+const Layout: React.FC = () => {
   return (
-    <Stack>
-      <Stack.Screen name="call" />
-      <Stack.Screen name="chat" options={{ headerShown: false }} />
-      <Stack.Screen name="profile" />
-      <Stack.Screen name="update" />
-    </Stack>
+    <Tabs tabBar={(props) => <TabBar {...props} />}>
+      <Tabs.Screen
+        name="chat"
+        options={{
+          headerShown: false,
+          title: "Chat",
+        }}
+      />
+      <Tabs.Screen
+        name="update"
+        options={{
+          headerShown: false,
+          title: "Update",
+        }}
+      />
+      <Tabs.Screen
+        name="call"
+        options={{
+          headerShown: false,
+          title: "Call",
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          headerShown: false,
+          title: "Profile",
+        }}
+      />
+    </Tabs>
   );
 };
 
