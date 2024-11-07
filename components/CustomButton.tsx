@@ -60,7 +60,8 @@ const CustomButton = ({
       mode={bgVariant === "outline" ? "outlined" : "contained"}
       style={[
         getBgVariantStyle(bgVariant, theme),
-        { paddingVertical: 6, paddingHorizontal: 16, borderRadius: 8 }, style
+        { paddingVertical: 6, paddingHorizontal: 16, borderRadius: 8 },
+        style,
       ]}
       labelStyle={[getTextVariantStyle(textVariant, theme), { fontSize: 16 }]}
       icon={IconLeft ? () => <IconLeft width={24} height={24} /> : undefined}

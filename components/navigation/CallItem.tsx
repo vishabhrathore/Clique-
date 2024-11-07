@@ -1,6 +1,6 @@
 import { Theme } from "@/assets/theme/theme";
-import { formatTimestamp } from "@/lib/logics";
-import { ChatItemProps } from "@/types/type";
+import { formatcallTimestamp, formatTimestamp } from "@/lib/logics";
+import { CallItemProps } from "@/types/type";
 import React, { useState } from "react";
 import {
   View,
@@ -30,10 +30,15 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
+import IncomingIcon from "@/assets/icons/IncomingIcon";
+import OutgoingIcon from "@/assets/icons/OutgoingIcon";
+import MissedCallIcon from "@/assets/icons/MissedCallIcon";
+import PhoneIcon from "@/assets/icons/PhoneIcon";
+import VideoIcon from "@/assets/icons/VideoIcon";
 
 const screenWidth = Dimensions.get("window").width;
 
-const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
+const CallItem: React.FC<CallItemProps> = ({ item, onDelete }) => {
   const colorScheme = useColorScheme() || "light";
   const theme = useTheme();
   const styles = getStyles(colorScheme, theme);
@@ -165,50 +170,57 @@ const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
                   {item.name}
                 </Text>
 
-                <Text
-                  style={{
-                    fontFamily: "Outfit",
-                    fontSize: 12,
-                    color: theme.colors.outline,
-                    marginLeft: "auto",
-                  }}
-                  onLayout={handleTextLayout}
-                >
-                  {formatTimestamp(item.lastMessage.timestamp)}
-                </Text>
+                {/* <Text
+                                    style={{
+                                        fontFamily: 'Outfit',
+                                        fontSize: 12,
+                                        color: theme.colors.outline,
+                                        marginLeft: 'auto',
+                                    }}
+                                    onLayout={handleTextLayout}
+                                >
+                                    {formatTimestamp(item.lastMessage.timestamp)}
+                                </Text> */}
               </View>
 
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  gap: 4,
+                  justifyContent: "flex-start",
+                  alignItems: "center",
                 }}
               >
+                {/* "Incoming" | "Outgoing" | "Missed"; */}
+                {item.type === "Incoming" && <IncomingIcon />}
+                {item.type === "Outgoing" && <OutgoingIcon />}
+                {item.type === "Missed" && <MissedCallIcon />}
+
                 <Text
                   style={{
                     fontFamily: "Outfit",
                     fontSize: 15,
                     color: theme.colors.outline,
                     overflow: "hidden",
-                    flexBasis:
-                      screenWidth - String(item.unreadCount).length - 106,
+                    // flexBasis: screenWidth - String(item.unreadCount).length - 106,
                   }}
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {item.lastMessage.text}
+                  {formatcallTimestamp(item.time)}
                 </Text>
-                <Badge
-                  style={{
-                    backgroundColor: theme.colors.secondaryContainer,
-                    color: theme.colors.primary,
-                    fontSize: 12,
-                  }}
-                >
-                  {item.unreadCount}
-                </Badge>
               </View>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {item.callType === "Video" && <VideoIcon />}
+              {item.callType === "Voice" && <PhoneIcon />}
             </View>
           </View>
           {/* </Pressable> */}
@@ -218,7 +230,7 @@ const ChatItem: React.FC<ChatItemProps> = ({ item, onDelete }) => {
   );
 };
 
-export default ChatItem;
+export default CallItem;
 
 // Add your dynamic styles here as in the original code
 const getStyles = (colorScheme: "light" | "dark", theme: ThemeProp) =>

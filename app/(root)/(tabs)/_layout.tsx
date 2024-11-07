@@ -1,8 +1,6 @@
-import React from 'react';
-import { Tabs } from 'expo-router';
-import TabBar from '@/components/navigation/TabBar';
-import inject from "mobx-react"
-
+import React from "react";
+import { Tabs } from "expo-router";
+import TabBar from "@/components/navigation/TabBar";
 
 const Layout: React.FC = () => {
   return (
@@ -11,28 +9,28 @@ const Layout: React.FC = () => {
         name="chat"
         options={{
           headerShown: false,
-          title: 'Chat',
+          title: "Chat",
         }}
       />
       <Tabs.Screen
         name="update"
         options={{
           headerShown: false,
-          title: 'Update',
+          title: "Update",
         }}
       />
       <Tabs.Screen
         name="call"
         options={{
           headerShown: false,
-          title: 'Call',
+          title: "Call",
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           headerShown: false,
-          title: 'Profile',
+          title: "Profile",
         }}
       />
     </Tabs>

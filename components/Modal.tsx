@@ -1,18 +1,25 @@
-import React from 'react';
-import { View } from 'react-native';
-import { Dialog, Portal, Text, Button } from 'react-native-paper';
-import CustomButton from './CustomButton';
+import React from "react";
+import { View } from "react-native";
+import { Dialog, Portal, Text, Button } from "react-native-paper";
+import CustomButton from "./CustomButton";
 
 interface SuccessModalProps {
-    showSuccessModal: boolean;
-    onClose: () => void;
+  showSuccessModal: boolean;
+  onClose: () => void;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({ showSuccessModal, onClose }) => {
-    return (
-        <Portal>
-            <Dialog visible={showSuccessModal} onDismiss={onClose} style={{ borderRadius: 20 }}>
-                {/* <Dialog.Content>
+const SuccessModal: React.FC<SuccessModalProps> = ({
+  showSuccessModal,
+  onClose,
+}) => {
+  return (
+    <Portal>
+      <Dialog
+        visible={showSuccessModal}
+        onDismiss={onClose}
+        style={{ borderRadius: 20 }}
+      >
+        {/* <Dialog.Content>
                     <View style={{ alignItems: 'center', paddingVertical: 20 }}>
 
                         <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
@@ -33,11 +40,10 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ showSuccessModal, onClose }
                         Browse Home
                     </CustomButton>
                 </Dialog.Actions> */}
-                <Text> portal works</Text>
-
-            </Dialog>
-        </Portal>
-    );
+        <Text> portal works</Text>
+      </Dialog>
+    </Portal>
+  );
 };
 
 export default SuccessModal;

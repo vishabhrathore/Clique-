@@ -1,5 +1,5 @@
-import * as React from "react"
-import Svg, { G, Defs, ClipPath, Path } from "react-native-svg"
+import * as React from "react";
+import Svg, { G, Defs, ClipPath, Path } from "react-native-svg";
 const OtpIcon = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
@@ -187,5 +187,5 @@ const OtpIcon = (props) => (
       </G>
     </G>
   </Svg>
-)
-export default OtpIcon
+);
+export default OtpIcon;

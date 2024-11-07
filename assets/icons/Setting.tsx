@@ -13,13 +13,7 @@ const SettingIcon: React.FC<CustomIconProps & SvgProps> = ({
   color = "",
   ...props
 }) => (
-  <Svg
-    width={width}
-    height={height}
-    viewBox="0 0 24 24"
-    fill="none"
-    {...props}
-  >
+  <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
     <Path
       fill={color}
       fillRule="evenodd"

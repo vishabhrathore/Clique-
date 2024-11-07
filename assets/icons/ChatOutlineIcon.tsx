@@ -13,13 +13,7 @@ const ChatOutlineIcon: React.FC<CustomIconProps & SvgProps> = ({
   color = "currentColor",
   ...props
 }) => (
-  <Svg
-    width={width}
-    height={height}
-    viewBox="0 0 24 24"
-    fill="none"
-    {...props}
-  >
+  <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
     <Path
       fill="none"
       stroke={color}

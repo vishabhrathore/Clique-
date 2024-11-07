@@ -1,35 +1,43 @@
-// LayoutStore.ts
-import { observable, action, computed, makeObservable } from 'mobx';
+import { observable, action, computed, makeObservable } from "mobx";
+import { createContext, useContext } from "react";
 
 class TabUIStore {
-    isTabBarVisible: boolean = true;
+  isTabBarVisible: boolean = true;
+  lastScrollDirection: "up" | "down" | null = null; // Initialize lastScrollDirection
 
-    constructor() {
-        // Using `makeObservable` to manually declare observables, actions, and computed properties
-        makeObservable(this, {
-            isTabBarVisible: observable,
-            toggleTabBarVisibility: action.bound,
-            setTabBarVisibility: action.bound,
-            visibilityStatus: computed,
-        });
-    }
+  constructor() {
+    makeObservable(this, {
+      isTabBarVisible: observable,
+      lastScrollDirection: observable, // Make it observable
+      toggleTabBarVisibility: action.bound,
+      setTabBarVisibility: action.bound,
+      setScrollDirection: action.bound, // Add action to set scroll direction
+      visibilityStatus: computed,
+    });
+  }
 
-    // Action to toggle the tab bar's visibility
-    toggleTabBarVisibility() {
-        this.isTabBarVisible = !this.isTabBarVisible;
-    }
+  toggleTabBarVisibility() {
+    this.isTabBarVisible = !this.isTabBarVisible;
+  }
 
-    // Action to explicitly set the tab bar's visibility
-    setTabBarVisibility(isVisible: boolean) {
-        this.isTabBarVisible = isVisible;
-    }
+  setTabBarVisibility(isVisible: boolean) {
+    this.isTabBarVisible = isVisible;
+  }
 
-    // Computed value to return a descriptive status based on visibility
-    get visibilityStatus() {
-        return this.isTabBarVisible ? "Visible" : "Hidden";
-    }
+  setScrollDirection(direction: "up" | "down" | null) {
+    this.lastScrollDirection = direction; // Update the last scroll direction
+  }
+
+  get visibilityStatus() {
+    return this.isTabBarVisible ? "Visible" : "Hidden";
+  }
 }
 
-// Export an instance of the store to be used throughout the app
 const tabUIStore = new TabUIStore();
+export const TabUIStoreContext = createContext<TabUIStore>(tabUIStore);
+
+export const useTabUIStore = () => {
+  return useContext(TabUIStoreContext);
+};
+
 export default tabUIStore;

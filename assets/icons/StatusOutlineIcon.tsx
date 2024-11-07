@@ -13,13 +13,7 @@ const StatusOutlineIcon: React.FC<CustomIconProps & SvgProps> = ({
   color = "currentColor",
   ...props
 }) => (
-  <Svg
-    width={width}
-    height={height}
-    viewBox="0 0 24 24"
-    fill="none"
-    {...props}
-  >
+  <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
     <Path
       d="M15 3.512a9.03 9.03 0 0 1 5.5 5.523M11 3.055a9 9 0 0 0-6.605 13.76L3 21l4.185-1.395A9 9 0 0 0 20.945 13"
       stroke={color}
@@ -34,13 +28,7 @@ const StatusOutlineIcon: React.FC<CustomIconProps & SvgProps> = ({
       strokeLinejoin="round"
       strokeWidth={2}
     />
-    <Circle
-      cx={12}
-      cy={12}
-      r={1}
-      stroke={color}
-      strokeWidth={2}
-    />
+    <Circle cx={12} cy={12} r={1} stroke={color} strokeWidth={2} />
   </Svg>
 );
 

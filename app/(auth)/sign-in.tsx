@@ -12,14 +12,11 @@ import LoginIcon from "@/assets/icons/LoginIcon";
 import { router } from "expo-router";
 
 // Define a type for the form fields
-type FormFieldNames = "userName" |  "password";
+type FormFieldNames = "userName" | "password";
 
 // Validation logic
-const validateSignUpForm = (values: {
-  userName: string;
-  password: string;
-}) => {
-  const errors: { userName?: string;  password?: string } = {};
+const validateSignUpForm = (values: { userName: string; password: string }) => {
+  const errors: { userName?: string; password?: string } = {};
 
   if (!values.userName) {
     errors.userName = "Name is required";
@@ -49,9 +46,9 @@ const SignIn = () => {
     userName?: string;
     password?: string;
   }>({});
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useState(false);
 
-  const [secureEntry, setSecureEntry] = useState(true)
+  const [secureEntry, setSecureEntry] = useState(true);
 
   // Handle input changes
   const handleChange = (name: FormFieldNames, value: string) => {
@@ -80,73 +77,106 @@ const SignIn = () => {
 
   return (
     <ScrollView>
-    <SafeAreaView
-      style={{
-        display: "flex",
-        backgroundColor: theme.colors.background,
-        flex: 1,
-        padding: 16,
-      }}
-    >
-      <View style={{ width: "100%", display: "flex", alignItems: "center" }}>
-        <SignUpIcon />
+      <SafeAreaView
+        style={{
+          display: "flex",
+          backgroundColor: theme.colors.background,
+          flex: 1,
+          padding: 16,
+        }}
+      >
+        <View style={{ width: "100%", display: "flex", alignItems: "center" }}>
+          <SignUpIcon />
+        </View>
+        <Text
+          style={{ fontFamily: "Outfit500", fontSize: 24, marginBottom: 16 }}
+        >
+          Login to Your Account{" "}
+        </Text>
+        <OAuth />
 
-      </View>
-      <Text style={{ fontFamily: "Outfit500", fontSize: 24, marginBottom: 16 }}>Login to Your Account </Text>
-      <OAuth />
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginVertical: 20,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              height: 1,
+              backgroundColor: theme.colors.outline,
+            }}
+          />
+          <Text
+            style={{
+              marginHorizontal: 12,
+              fontSize: 12,
+              color: theme.colors.outline,
+            }}
+          >
+            or login with
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              height: 1,
+              backgroundColor: theme.colors.outline,
+            }}
+          />
+        </View>
+        <View style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <TextField
+            label="User Name"
+            value={values.userName}
+            placeholder="User Name"
+            onChangeText={(text) => handleChange("userName", text)}
+            onBlur={() => handleBlur("userName")} // Validate on blur
+            helperText={errors.userName}
+            error={!!errors?.userName}
+          />
+          <TextField
+            label="Password"
+            placeholder="Password"
+            value={values.password}
+            onPressRightIcon={() => setSecureEntry(!secureEntry)}
+            secureTextEntry={secureEntry}
+            rightIcon="eye"
+            onChangeText={(text) => handleChange("password", text)}
+            onBlur={() => handleBlur("password")} // Validate on blur
+            error={!!errors.password} // Display error if present
+            helperText={errors.password}
+          />
+          <View style={{ flexDirection: "row", marginVertical: 4 }}>
+            <TouchableOpacity onPress={() => router.replace("/(auth)/sign-up")}>
+              <Text style={{ color: theme.colors.primary, fontWeight: "bold" }}>
+                Forgot Password ?
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 20 }}>
-        <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
-        <Text style={{ marginHorizontal: 12, fontSize: 12, color: theme.colors.outline }}>or login with</Text>
-        <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
-      </View>
-      <View style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <TextField
-          label="User Name"
-          value={values.userName}
-          placeholder="User Name"
-          onChangeText={(text) => handleChange("userName", text)}
-          onBlur={() => handleBlur("userName")} // Validate on blur
-          helperText={errors.userName}
-          error={!!errors?.userName}
-        />
-        <TextField
-          label="Password"
-          placeholder="Password"
-          value={values.password}
-          onPressRightIcon={() => setSecureEntry(!secureEntry)}
-          secureTextEntry={secureEntry}
-          rightIcon="eye"
-
-          onChangeText={(text) => handleChange("password", text)}
-          onBlur={() => handleBlur("password")} // Validate on blur
-          error={!!errors.password} // Display error if present
-          helperText={errors.password}
-        />
-        <View style={{ flexDirection: "row", marginVertical: 4 }}>
+          <CustomButton onPress={handleSubmit} textVariant="white">
+            Login
+          </CustomButton>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            marginTop: 16,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Text>Do not have an Account ? </Text>
           <TouchableOpacity onPress={() => router.replace("/(auth)/sign-up")}>
-            <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>Forgot Password ?</Text>
+            <Text style={{ color: theme.colors.primary, fontWeight: "bold" }}>
+              Register
+            </Text>
           </TouchableOpacity>
         </View>
-
-
-
-        <CustomButton onPress={handleSubmit} textVariant="white">
-          Login
-        </CustomButton>
-
-
-      </View>
-      <View style={{ width: "100%", flexDirection: "row", marginTop: 16, display: "flex", justifyContent: "center" }}>
-        <Text>Do not have an Account ? </Text>
-        <TouchableOpacity onPress={() => router.replace("/(auth)/sign-up")}>
-          <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>Register</Text>
-        </TouchableOpacity>
-      </View>
-
-
-    </SafeAreaView >
-
+      </SafeAreaView>
     </ScrollView>
   );
 };
